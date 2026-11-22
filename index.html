@@ -23,6 +23,7 @@ body{margin:0;font:400 1rem/1.6 Inter,system-ui,sans-serif;color:var(--ink);back
 .scrim{background:linear-gradient(90deg,rgba(4,8,6,.6),rgba(4,8,6,.12) 55%,transparent),linear-gradient(transparent 75%,rgba(4,8,6,.7))}
 #ov{background:var(--bg);opacity:0}
 header,main,footer{position:relative;z-index:2}
+#pp{position:fixed;right:1rem;bottom:calc(env(safe-area-inset-bottom,0px) + 1rem);z-index:6}
 .skip{position:absolute;left:-9999px}.skip:focus{left:1rem;top:1rem;background:#fff;color:#000;padding:.5rem 1rem;z-index:9}
 header{position:fixed;top:0;left:0;right:0;z-index:5;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:calc(env(safe-area-inset-top,0px) + .9rem) 5vw .9rem;transition:background .3s,backdrop-filter .3s}
 header.s{background:rgba(7,11,10,.78);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
@@ -88,6 +89,7 @@ footer a{color:var(--mint)}
 <body>
 <a class="skip" href="#modules">Aller au contenu</a>
 <video id="vid" poster="poster.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true" src="combat.mp4"></video><div class="scrim"></div><div id="ov"></div>
+<button id="pp" class="btn ghost sm" type="button">Pause la vidéo</button>
 <header id="top">
   <nav aria-label="Navigation"><a href="#modules">Modules</a><a href="#telecharger">Télécharger</a><a href="#faq">FAQ</a></nav>
   <img src="logo.png" alt="Vortex Client">
@@ -192,8 +194,11 @@ const ov=document.getElementById('ov'),v=document.getElementById('vid'),hd=docum
 function sc(){ov.style.opacity=Math.min(.85,scrollY/(innerHeight*.7));hd.classList.toggle('s',scrollY>40)}
 addEventListener('scroll',sc,{passive:true});sc();
 const go=()=>v.play().catch(()=>{});
-if(rm){v.pause()}else{go();addEventListener('pointerdown',go,{once:true});
-  new IntersectionObserver(([e])=>{e.isIntersecting?go():v.pause()}).observe(document.getElementById('hero'))}
+let manual=false;
+go();addEventListener('pointerdown',go,{once:true});
+new IntersectionObserver(([e])=>{if(!manual){e.isIntersecting?go():v.pause()}}).observe(document.getElementById('hero'));
+const pp=document.getElementById('pp');
+pp.onclick=()=>{if(v.paused){manual=false;go();pp.textContent='Pause la vidéo'}else{manual=true;v.pause();pp.textContent='Lire la vidéo'}};
 // apparition au défilement
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
