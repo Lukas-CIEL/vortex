@@ -3,84 +3,104 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Vortex Client 2.0 : le launcher Minecraft tout-en-un, un seul .exe pour Minecraft 1.21.11 avec Fabric et 21 modules.">
+<title>Vortex Client 2.0 : le launcher Minecraft tout-en-un</title>
+<meta name="description" content="Vortex Client 2.0 : un seul .exe pour Minecraft 1.21.11 avec Fabric et 21 modules. Mouvement, combat, rendu et inventaire dans un seul menu.">
+<meta name="theme-color" content="#070b0a">
+<meta property="og:title" content="Vortex Client 2.0">
+<meta property="og:description" content="Le launcher Minecraft tout-en-un : un seul .exe, 21 modules, Minecraft 1.21.11 avec Fabric.">
+<meta property="og:image" content="https://lukas-ciel.github.io/vortex/poster.jpg">
 <link rel="icon" href="logo.png">
-<title>Vortex Client 2.0, le launcher Minecraft tout-en-un</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#070b0a;--ink:#fff;--mute:#b9c4bf;--mint:#9be7d4;--glass:rgba(12,18,16,.72);--line:rgba(255,255,255,.14);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#070b0a}}
-:root[data-theme="dark"]{--bg:#070b0a}
+:root{--bg:#070b0a;--ink:#fff;--mute:#b9c4bf;--mint:#9be7d4;--glass:rgba(12,18,16,.74);--line:rgba(255,255,255,.14);color-scheme:dark;box-sizing:border-box}
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-behavior:smooth;scroll-padding-top:5rem}
-body{margin:0;font:400 1rem/1.6 Inter,system-ui,sans-serif;color:var(--ink);background:linear-gradient(#27405f,#1d3a2a) fixed}
-#bg,.scrim,#ov{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+body{margin:0;font:400 1rem/1.6 Inter,system-ui,sans-serif;color:var(--ink);background:#1d3a2a}
+#vid,.scrim,#ov{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#vid{object-fit:cover}
 .scrim{background:linear-gradient(90deg,rgba(4,8,6,.6),rgba(4,8,6,.12) 55%,transparent),linear-gradient(transparent 75%,rgba(4,8,6,.7))}
-#bg,#vid{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none}
-#vid{background:#1d3a2a}
 #ov{background:var(--bg);opacity:0}
-header,main{position:relative;z-index:2}
-header{position:fixed;top:0;left:0;right:0;z-index:5;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 1rem) 5vw 1rem}
-header nav{display:flex;gap:1.6rem}
+header,main,footer{position:relative;z-index:2}
+.skip{position:absolute;left:-9999px}.skip:focus{left:1rem;top:1rem;background:#fff;color:#000;padding:.5rem 1rem;z-index:9}
+header{position:fixed;top:0;left:0;right:0;z-index:5;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:calc(env(safe-area-inset-top,0px) + .9rem) 5vw .9rem;transition:background .3s,backdrop-filter .3s}
+header.s{background:rgba(7,11,10,.78);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+header nav{display:flex;gap:1.5rem}
 header nav a{color:#e6ece9;text-decoration:none;font-weight:500;font-size:.95rem}
+header nav a:hover{color:var(--mint)}
 header img{width:44px;height:44px;image-rendering:pixelated;display:block}
 header .r{justify-self:end}
-@media(max-width:700px){header nav{display:none}header{grid-template-columns:auto 1fr}header .r{grid-column:2}}
-.btn{display:inline-flex;align-items:center;gap:.6rem;font:600 .95rem Inter,sans-serif;text-decoration:none;color:#0a120f;background:#fff;padding:.8rem 1.4rem;border-radius:10px;border:1px solid #fff;transition:transform .15s}
-.btn:hover{transform:translateY(-2px)}
+@media(max-width:760px){header nav{display:none}header{grid-template-columns:auto 1fr}header .r{grid-column:2}}
+.btn{display:inline-flex;align-items:center;gap:.6rem;font:600 .95rem Inter,sans-serif;text-decoration:none;color:#0a120f;background:#fff;padding:.8rem 1.4rem;border-radius:10px;border:1px solid #fff;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(155,231,212,.25)}
 .btn.ghost{background:rgba(255,255,255,.07);color:#fff;border-color:var(--line);backdrop-filter:blur(8px)}
 .btn.sm{padding:.55rem 1.1rem}
-a:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
-.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:9rem 5vw 9rem}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:9rem 5vw 10rem;position:relative}
 .pill{align-self:flex-start;display:flex;gap:.6rem;align-items:center;font-size:.85rem;font-weight:600;padding:.3rem .9rem .3rem .3rem;border:1px solid var(--line);border-radius:99px;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);margin-bottom:1.6rem}
 .pill b{background:#19e66b;color:#04210f;padding:.1rem .6rem;border-radius:99px;font-size:.75rem}
-h1{font-family:Fraunces,Georgia,serif;font-weight:300;font-size:clamp(2.5rem,6.4vw,5.6rem);line-height:1.04;letter-spacing:-.02em;margin:0 0 2rem;max-width:12em;text-shadow:0 4px 30px rgba(0,0,0,.6)}
-h1 strong{font-weight:700}
-h1 em{font-style:italic;font-weight:400;color:var(--mint)}
+h1,h2{font-family:Fraunces,Georgia,serif;font-weight:300;letter-spacing:-.02em;margin:0}
+h1{font-size:clamp(2.5rem,6.4vw,5.6rem);line-height:1.04;margin-bottom:1.2rem;max-width:12em;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+h1 strong{font-weight:700}h1 em{font-style:italic;font-weight:400;color:var(--mint)}
+.sub{max-width:34rem;color:#d7e0dc;font-size:1.15rem;margin:0 0 2rem;text-shadow:0 2px 16px rgba(0,0,0,.7)}
 .cta{display:flex;gap:.8rem;flex-wrap:wrap}
 .stats{position:absolute;left:5vw;right:5vw;bottom:2.2rem;display:flex;flex-wrap:wrap;gap:1.2rem 0}
 .stats div{padding-right:2rem;margin-right:2rem;border-right:1px solid var(--line)}
-.stats div:last-child{border:0}
-.stats b{display:block;font-weight:600}
-.stats span{color:var(--mute);font-size:.9rem}
-@media(max-width:700px){.stats div{border:0;margin:0;padding:0 1.5rem 0 0}.hero{padding-bottom:12rem}}
-.wrap{max-width:1100px;margin:0 auto 5rem;padding:0 5vw}
-h2{font-family:Fraunces,Georgia,serif;font-weight:300;font-size:clamp(1.9rem,4.5vw,3rem);margin:0 0 .6rem;letter-spacing:-.01em}
-.lead{color:var(--mute);max-width:36rem;margin:0 0 2rem}
+.stats div:last-child{border:0}.stats b{display:block;font-weight:600}.stats span{color:var(--mute);font-size:.9rem}
+@media(max-width:760px){.stats div{border:0;margin:0;padding:0 1.5rem 0 0}.hero{padding-bottom:13rem}}
+.wrap{max-width:1100px;margin:0 auto 6rem;padding:0 5vw}
+h2{font-size:clamp(1.9rem,4.5vw,3rem);margin-bottom:.6rem}
+.lead{color:var(--mute);max-width:38rem;margin:0 0 2rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem}
 .card{background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:16px;padding:1.5rem}
-.card h3{font-size:1.1rem;font-weight:600;margin:0 0 .8rem}
-.card p{margin:0;color:var(--mute)}
-.chips{display:flex;flex-wrap:wrap;gap:.45rem}
-.chips span{font-size:.9rem;padding:.3rem .75rem;border-radius:99px;background:rgba(255,255,255,.07);border:1px solid var(--line)}
+.card h3{font-size:1.1rem;font-weight:600;margin:0 0 .6rem}.card p{margin:0;color:var(--mute)}
+.os .btn{margin-top:1rem}.os.me{border-color:var(--mint);box-shadow:0 0 0 1px var(--mint)}
+.os small{display:block;color:var(--mute);margin-top:.6rem;font-size:.85rem}
 .n{width:2rem;height:2rem;border-radius:50%;display:grid;place-items:center;font-weight:600;color:#06241c;background:var(--mint);margin-bottom:.9rem}
-.os.me{border-color:var(--mint)}
-.os .btn{margin-top:1rem}
-.steps{margin:0;padding-left:1.2rem;color:var(--mute)}
-.steps li{margin:.5rem 0}
-.steps b{color:var(--ink)}
+.mods{display:grid;grid-template-columns:200px 1fr;overflow:hidden;padding:0}
+.tabs{display:flex;flex-direction:column;padding:.8rem;border-right:1px solid var(--line);gap:.3rem}
+.tabs button{all:unset;cursor:pointer;padding:.7rem 1rem;border-radius:10px;color:var(--mute);font-weight:500}
+.tabs button[aria-selected=true]{background:rgba(155,231,212,.14);color:var(--mint)}
+.tabs button:hover{color:#fff}
+.list{padding:.6rem 1.2rem}
+.row{display:flex;align-items:center;gap:1rem;padding:.8rem 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}.row div{flex:1}.row b{display:block;font-weight:600}.row span{color:var(--mute);font-size:.9rem}
+.sw{all:unset;cursor:pointer;width:44px;height:26px;border-radius:99px;background:rgba(255,255,255,.18);position:relative;transition:background .2s;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
+.sw[aria-checked=true]{background:#19c37a}.sw[aria-checked=true]::after{transform:translateX(18px)}
+.hint{margin:1rem 0 0;color:var(--mute);font-size:.9rem}
+@media(max-width:700px){.mods{grid-template-columns:1fr}.tabs{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line)}}
+.steps{margin:0;padding-left:1.2rem;color:var(--mute)}.steps li{margin:.6rem 0}.steps b{color:#fff}
 code{background:rgba(255,255,255,.1);padding:.1rem .4rem;border-radius:6px;font-size:.9rem}
-.final{text-align:center;padding:3rem 1.5rem}
-.final .btn{margin-top:1.2rem}
+details{border-bottom:1px solid var(--line);padding:1rem 0}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:1rem}
+summary::after{content:"+";color:var(--mint);font-size:1.3rem;line-height:1}
+details[open] summary::after{content:"−"}
+details p{color:var(--mute);margin:.7rem 0 0}
+.final{text-align:center;padding:3.5rem 1.5rem}.final .btn{margin-top:1.2rem}
 footer{max-width:1100px;margin:0 auto;padding:0 5vw 3rem;font-size:.85rem;color:var(--mute);text-align:center}
+footer a{color:var(--mint)}
+.js .rv{opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s}.js .rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.js .rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
+<a class="skip" href="#modules">Aller au contenu</a>
 <video id="vid" poster="poster.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true" src="combat.mp4"></video><div class="scrim"></div><div id="ov"></div>
-<header>
-  <nav><a href="#modules">Modules</a><a href="#telecharger">Télécharger</a><a href="#installation">Installation</a></nav>
+<header id="top">
+  <nav aria-label="Navigation"><a href="#modules">Modules</a><a href="#telecharger">Télécharger</a><a href="#faq">FAQ</a></nav>
   <img src="logo.png" alt="Vortex Client">
   <div class="r"><a class="btn ghost sm" href="#telecharger">Télécharger</a></div>
 </header>
 <main>
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="pill"><b>NOUVEAU</b>Vortex Client 2.0 est disponible</div>
     <h1>Jouer avec <strong>Vortex Client</strong>, <em>c’est prendre l’avantage</em></h1>
+    <p class="sub">Le launcher et le mod réunis dans un seul .exe. Minecraft 1.21.11, Fabric et 21 modules, prêts en un clic.</p>
     <div class="cta">
       <a class="btn" href="#telecharger"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="currentColor" d="M0 2.5 7.5 1.5V8.5H0zM8.5 1.4 18 0V8.5H8.5zM0 9.5H7.5V16.5L0 15.5zM8.5 9.5H18V18L8.5 16.6z"/></svg>Télécharger</a>
-      <a class="btn ghost" href="#modules">Voir les modules</a>
+      <a class="btn ghost" href="#modules">Découvrir les modules</a>
     </div>
     <div class="stats">
       <div><b>Un seul .exe</b><span>Launcher et mod réunis, rien à configurer</span></div>
@@ -89,58 +109,97 @@ footer{max-width:1100px;margin:0 auto;padding:0 5vw 3rem;font-size:.85rem;color:
     </div>
   </section>
 
-  <section class="wrap" id="modules">
+  <section class="wrap rv" id="modules">
     <h2>21 modules, un seul menu</h2>
-    <p class="lead">Appuie sur Shift droit en jeu pour ouvrir le menu. La touche se change dans le launcher.</p>
-    <div class="grid">
-      <div class="card"><h3>Mouvement</h3><div class="chips"><span>Fly</span><span>Speed</span><span>Sprint</span><span>AirJump</span></div></div>
-      <div class="card"><h3>Combat</h3><div class="chips"><span>Aimbot</span><span>KillAura</span><span>MacePvP</span><span>Reach</span><span>AutoClicker</span><span>NoFall</span><span>Velocity</span></div></div>
-      <div class="card"><h3>Rendu</h3><div class="chips"><span>ESP Coffres</span><span>ESP Joueurs</span><span>ESP Mobs</span><span>Tracers</span><span>Fullbright</span></div></div>
-      <div class="card"><h3>Inventaire</h3><div class="chips"><span>ChestStealer</span><span>AutoArmor</span><span>AutoTotem</span><span>AutoEat</span><span>AutoTool</span></div></div>
+    <p class="lead">En jeu, appuie sur Shift droit pour ouvrir le menu. Essaie-le ici : clique sur les interrupteurs.</p>
+    <div class="card mods">
+      <div class="tabs" role="tablist" id="tabs"></div>
+      <div class="list" id="list"></div>
     </div>
+    <p class="hint">Démonstration : les interrupteurs de cette page ne font rien dans le jeu.</p>
   </section>
 
-  <section class="wrap" id="installation">
-    <h2>Prêt en trois étapes</h2>
-    <p class="lead">Tu te connectes avec ton compte Microsoft dans le launcher officiel.</p>
-    <div class="grid">
-      <div class="card"><div class="n">1</div><h3>Lance le .exe</h3><p>Télécharge Vortex Client et ouvre-le.</p></div>
-      <div class="card"><div class="n">2</div><h3>Clique sur JOUER</h3><p>Minecraft, Fabric, Fabric API et le mod s’installent, et le profil « Vortex Client 2.0 » est créé.</p></div>
-      <div class="card"><div class="n">3</div><h3>Lance la partie</h3><p>Choisis le profil dans le launcher Minecraft et joue.</p></div>
-    </div>
-  </section>
-
-  <section class="wrap" id="telecharger">
+  <section class="wrap rv" id="telecharger">
     <h2>Télécharger Vortex Client</h2>
-    <p class="lead">Choisis ton système. Le launcher tout-en-un existe pour Windows ; sur Linux et macOS, tu peux installer le mod à la main.</p>
+    <p class="lead">Choisis ton système. Le launcher tout-en-un existe pour Windows. Sur Linux et macOS, tu installes le mod à la main.</p>
     <div class="grid">
-      <div class="card os" data-os="win"><h3>Windows</h3><p>Un seul .exe : il installe Minecraft, Fabric et le mod pour toi.</p><a class="btn" href="https://github.com/Lukas-CIEL/vortex/releases/latest">Télécharger</a></div>
+      <div class="card os" data-os="win"><h3>Windows</h3><p>Un seul .exe : il installe Minecraft, Fabric et le mod pour toi.</p><a class="btn" href="https://github.com/Lukas-CIEL/vortex/releases/latest">Télécharger</a><small>Fichier d’environ 21 Mo</small></div>
       <div class="card os" data-os="linux"><h3>Linux</h3><p>Le launcher arrive plus tard. En attendant, installe le mod avec Fabric.</p><a class="btn ghost" href="#manuel">Installation manuelle</a></div>
       <div class="card os" data-os="mac"><h3>macOS</h3><p>Le launcher arrive plus tard. En attendant, installe le mod avec Fabric.</p><a class="btn ghost" href="#manuel">Installation manuelle</a></div>
     </div>
   </section>
 
-  <section class="wrap" id="manuel">
-    <h2>Installation manuelle (Linux et macOS)</h2>
+  <section class="wrap rv" id="installation">
+    <h2>Prêt en trois étapes</h2>
+    <p class="lead">Tu te connectes avec ton compte Microsoft dans le launcher officiel.</p>
+    <div class="grid">
+      <div class="card"><div class="n">1</div><h3>Lance le .exe</h3><p>Télécharge Vortex Client et ouvre-le.</p></div>
+      <div class="card"><div class="n">2</div><h3>Clique sur JOUER</h3><p>Minecraft, Fabric, Fabric API et le mod s’installent, et le profil « Vortex Client 2.0 » est créé.</p></div>
+      <div class="card"><div class="n">3</div><h3>Lance la partie</h3><p>Choisis le profil dans le launcher Minecraft, joue, puis appuie sur Shift droit.</p></div>
+    </div>
+  </section>
+
+  <section class="wrap rv" id="manuel">
+    <h2>Installation manuelle</h2>
+    <p class="lead">Pour Linux et macOS.</p>
     <div class="card"><ol class="steps">
       <li><b>Installe Java 21</b> et lance Minecraft 1.21.11 une fois.</li>
       <li><b>Installe Fabric</b> pour Minecraft 1.21.11 avec l’installateur officiel sur fabricmc.net.</li>
-      <li><b>Mets deux fichiers dans le dossier <code>mods</code></b> : Fabric API et <a href="vortex-client.jar" download>vortex-client.jar</a>. Sous Linux, c’est <code>~/.minecraft/mods</code>. Sous macOS, c’est <code>~/Library/Application Support/minecraft/mods</code>.</li>
-      <li><b>Lance le profil Fabric</b> et appuie sur Shift droit en jeu pour ouvrir le menu.</li>
+      <li><b>Mets deux fichiers dans le dossier <code>mods</code></b> : Fabric API et <a href="vortex-client.jar" download style="color:var(--mint)">vortex-client.jar</a>. Sous Linux : <code>~/.minecraft/mods</code>. Sous macOS : <code>~/Library/Application Support/minecraft/mods</code>.</li>
+      <li><b>Lance le profil Fabric</b> et appuie sur Shift droit en jeu.</li>
     </ol></div>
   </section>
 
-  <section class="wrap"><div class="card final"><h2>Prêt à jouer ?</h2><p>Un seul fichier pour Windows.</p><a class="btn" href="#telecharger">Télécharger Vortex Client</a></div></section>
-  <footer>Vortex Client n’est pas affilié à Mojang ni à Microsoft. Minecraft est une marque de Mojang AB. Respecte le règlement de chaque serveur avant d’activer des modules.</footer>
+  <section class="wrap rv" id="faq">
+    <h2>Questions fréquentes</h2>
+    <p class="lead"></p>
+    <details><summary>Quelles versions de Minecraft sont prises en charge ?</summary><p>Pour l’instant, Minecraft 1.21.11 avec Fabric.</p></details>
+    <details><summary>Comment ouvrir le menu en jeu ?</summary><p>Appuie sur Shift droit. La touche se change dans le launcher.</p></details>
+    <details><summary>Windows affiche un avertissement au lancement. Pourquoi ?</summary><p>Le programme n’est pas signé numériquement, donc Windows le signale comme inconnu. Ne l’ouvre que si tu l’as téléchargé depuis cette page.</p></details>
+    <details><summary>Puis-je l’utiliser sur n’importe quel serveur ?</summary><p>Chaque serveur a son propre règlement et peut interdire certains modules. Lis-le avant d’en activer.</p></details>
+    <details><summary>Comment le désinstaller ?</summary><p>Supprime le .exe et le dossier <code>.vortex</code> situé dans <code>%APPDATA%</code>.</p></details>
+  </section>
+
+  <section class="wrap rv"><div class="card final"><h2>Prêt à jouer ?</h2><p>Un seul fichier pour Windows.</p><a class="btn" href="https://github.com/Lukas-CIEL/vortex/releases/latest">Télécharger Vortex Client</a></div></section>
 </main>
+<footer>Vortex Client n’est pas affilié à Mojang ni à Microsoft. Minecraft est une marque de Mojang AB.<br><a href="https://github.com/Lukas-CIEL/vortex">GitHub</a> · <a href="https://github.com/Lukas-CIEL/vortex/releases">Versions</a></footer>
 
 <script>
-const ov=document.getElementById('ov'),rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
-function sc(){ov.style.opacity=Math.min(.85,scrollY/(innerHeight*.7))}
+document.documentElement.classList.add('js');
+const M={
+ 'Mouvement':[['Fly','Vol libre.'],['Speed','Course plus rapide, élan conservé en l’air.'],['Sprint','Sprint automatique dès que tu avances.'],['AirJump','Un saut supplémentaire en l’air.']],
+ 'Combat':[['Aimbot','Vise la cible sous le viseur quand tu maintiens le clic.'],['KillAura','Frappe automatique avec rotation vers la cible.'],['MacePvP','Combat à la masse automatisé.'],['Reach','Portée d’attaque de 3,2.'],['AutoClicker','Clics automatiques.'],['NoFall','Pas de dégâts de chute.'],['Velocity','Recul réduit.']],
+ 'Rendu':[['ESP Coffres','Coffres, barils, coffres de l’Ender et shulkers à travers les murs.'],['ESP Joueurs','Cadre, nom, points de vie et distance.'],['ESP Mobs','Cadre autour des mobs.'],['Tracers','Une ligne vers chaque joueur.'],['Fullbright','Luminosité maximale, même dans les grottes.']],
+ 'Inventaire':[['ChestStealer','Vide le coffre ouvert.'],['AutoArmor','Équipe la meilleure armure.'],['AutoTotem','Remet un totem en main secondaire.'],['AutoEat','Mange quand la faim baisse.'],['AutoTool','Choisit le bon outil.']]
+};
+const tabs=document.getElementById('tabs'),list=document.getElementById('list');
+function show(cat){
+  [...tabs.children].forEach(b=>b.setAttribute('aria-selected',b.textContent===cat));
+  list.innerHTML='';
+  M[cat].forEach(([n,d],i)=>{
+    const r=document.createElement('div');r.className='row';
+    r.innerHTML='<div><b></b><span></span></div><button class="sw" role="switch" aria-checked="'+(i<2)+'"></button>';
+    r.querySelector('b').textContent=n;r.querySelector('span').textContent=d;
+    const s=r.querySelector('button');s.setAttribute('aria-label',n);
+    s.onclick=()=>s.setAttribute('aria-checked',s.getAttribute('aria-checked')!=='true');
+    list.appendChild(r);
+  });
+}
+Object.keys(M).forEach(c=>{const b=document.createElement('button');b.setAttribute('role','tab');b.textContent=c;b.onclick=()=>show(c);tabs.appendChild(b)});
+show('Mouvement');
+// fond vidéo, voile et en-tête
+const ov=document.getElementById('ov'),v=document.getElementById('vid'),hd=document.getElementById('top'),rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function sc(){ov.style.opacity=Math.min(.85,scrollY/(innerHeight*.7));hd.classList.toggle('s',scrollY>40)}
 addEventListener('scroll',sc,{passive:true});sc();
-const vid=document.getElementById('vid');const go=()=>vid.play().catch(()=>{});go();addEventListener('pointerdown',go,{once:true});addEventListener('scroll',go,{once:true,passive:true});
-const ua=navigator.userAgent,k=/Windows/.test(ua)?'win':/Android/.test(ua)?'':/Mac/.test(ua)?'mac':/Linux/.test(ua)?'linux':'';const me=document.querySelector('[data-os="'+k+'"]');if(me)me.classList.add('me');
-
+const go=()=>v.play().catch(()=>{});
+if(rm){v.pause()}else{go();addEventListener('pointerdown',go,{once:true});
+  new IntersectionObserver(([e])=>{e.isIntersecting?go():v.pause()}).observe(document.getElementById('hero'))}
+// apparition au défilement
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+// carte du système de l’utilisateur
+const ua=navigator.userAgent,k=/Windows/.test(ua)?'win':/Android/.test(ua)?'':/Mac/.test(ua)?'mac':/Linux/.test(ua)?'linux':'';
+const me=document.querySelector('[data-os="'+k+'"]');if(me)me.classList.add('me');
 </script>
 </body>
 </html>
